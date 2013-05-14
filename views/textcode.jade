@@ -3,8 +3,6 @@ head
   script(type="text/javascript", src="/scripts/codemirror.js")
   script(type="text/javascript", src="/scripts/ruby.js")
   script(type="text/javascript", src="/scripts/jquery-1.7.2.min.js")
-  //
-    script(type="text/javascript", src="/scripts/bootstrap.min.js")
   script(type="text/javascript", src="/scripts/helpterms.js")
   script(type="text/javascript", src="/scripts/textcode.js")
   link(type="text/css", rel="stylesheet", href="/stylesheets/journal.min.css")
@@ -34,17 +32,18 @@ body(style="background-color:#444;")
               span Send data log?
           br
           br
-          h4(style="display:inline;margin-right:20px;") Write Sketch or Select:
+          h4(style="display:inline;margin-right:20px;") Write Sketch:
           - if (program == null)
-            select#samples(href='#', onchange='writeSample()')
-              option(value="none") -
-              option(value="blink") Blink Test
-              option(value="sensor") Sensor Test
-              option(value="servo") Motor Test
-              option(value="hello") Stream Test
-              option(value="random") Random Blink
-              option(value="streamer") Data Streamer
-            br
+            //
+              select#samples(href='#', onchange='writeSample()')
+                option(value="none") -
+                option(value="blink") Blink Test
+                option(value="sensor") Sensor Test
+                option(value="servo") Motor Test
+                option(value="hello") Stream Test
+                option(value="random") Random Blink
+                option(value="streamer") Data Streamer
+              br
             textarea.span10#sketchplace(name="mysketch")
           - else
             br
@@ -57,44 +56,50 @@ body(style="background-color:#444;")
           h4 Reference
           ul.spacedlist
             li
-              span pinMode( PIN# , INPUT or OUTPUT )
+              span map
               br
-              span(style="color:#333;") prepares a pin to read or write information
+              span &nbsp;&nbsp;@ "San Francisco, CA"
+              br
+              span plz
+              br
+              span(style="font-family:arial;") Makes a map centered on San Francisco
             li
-              span digitalWrite( PIN# , HIGH or LOW )
+              span map
               br
-              span(style="color:#333;") turns the pin on or off
-            li(style="padding-bottom:5px;border-bottom:1px solid silver;")
-              span delay( milliseconds )
+              span &nbsp;&nbsp;[ 40, -70 ]
               br
-              span(style="color:#333;") waits before continuing to the next line
+              span plz
+              br
+              span(style="font-family:arial;") Makes a map centered on 40 North, 70 West
             li
-              span analogRead( PIN# )
+              span map
               br
-              span(style="color:#333;") returns sensor value from 0 (off) to 1024 (100% on)
-            li(style="padding-bottom:5px;border-bottom:1px solid silver;")
-              span digitalRead( PIN# )
+              span &nbsp;&nbsp;@ "Washington, DC"
               br
-              span(style="color:#333;") returns sensor value as HIGH or LOW
+              span &nbsp;&nbsp;marker
+              br
+              span &nbsp;&nbsp;&nbsp;&nbsp;"White House"
+              br
+              span &nbsp;&nbsp;&nbsp;&nbsp;@ "1600 Pennsylvania Ave, DC"
+              br
+              span &nbsp;&nbsp;plz
+              br
+              span plz
+              br
+              span(style="font-family:arial;") Adds a clickable marker and centers the map on Washington, DC
             li
-              span #include &lt;Servo.h&gt;
+              span map
               br
-              span Servo myservo;
+              span &nbsp;&nbsp;[ 2, -7 ]
               br
-              span(style="color:#333;") paste at start of code to allow motor control
-            li
-              span myservo.attach(9);
+              span &nbsp;&nbsp;line
               br
-              span(style="color:#333;") Prepare servo motor inside setup
-            li(style="padding-bottom:5px;border-bottom:1px solid silver;")
-              span myservo.write( 0 <= val <= 179 )
+              span &nbsp;&nbsp;&nbsp;&nbsp;[ 0, -10 ]
               br
-              span(style="color:#333;") Turn servo motor to 0-179 degrees
-            li
-              span Serial.begin( 9600 )
+              span &nbsp;&nbsp;&nbsp;&nbsp;[ 5, -5 ]
               br
-              span(style="color:#333;") connect computer and Arduino over USB/serial port
-            li
-              span Serial.println( # or "" )
+              span &nbsp;&nbsp;plz
               br
-              span(style="color:#333;") output a message (number or text) to the computer
+              span plz
+              br
+              span(style="font-family:arial;") Adds a line

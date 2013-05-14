@@ -13,7 +13,7 @@ function init(){
     $(".CodeMirror-lines > div").css({"margin-left": "28px"});
   }, 250);
   if(!($("#sketchplace").val().length)){
-    myCodeMirror.setValue("/* hello */\n\nvoid setup(){\n}\n\nvoid loop(){\n}");
+    myCodeMirror.setValue('map\n  @ "Florida"\n\n  marker\n    @ "Disney World"\n\n  plz\n\nplz');
   }  
 
   setInterval(function(){

@@ -5,76 +5,11 @@ function init(){
     lineNumbers: true,
     matchBrackets: true,
     readOnly: true,
-    mode: "text/x-csrc"
+    mode: "text/x-ruby"
   });
   setTimeout(function(){
     $(".CodeMirror-lines > div").css({"margin-left": "28px"});
-  }, 250);
-
-  setInterval(function(){
-    var selectedLine = myCodeMirror.getCursor().line;
-    if(selectedLine >= 0 && selectedLine != lastSelectLine){
-      if($(".popover").length){
-        $(".popover").remove();
-      }
-      lastSelectLine = selectedLine;
-      smartLine( selectedLine );
-    }
-  }, 250);
-}
-function smartLine( linenum ){
-
-//  linepre.onclick = function(e){
-    var linetext = myCodeMirror.getLine( linenum );
-    linetext = replaceAll(linetext, "(", " ");
-    linetext = replaceAll(linetext, ")", " ");
-    linetext = replaceAll(linetext, "{", " ");
-    linetext = replaceAll(linetext, "}", " ");
-    linetext = replaceAll(linetext, ";", " ");
-    linetext = replaceAll(linetext, "	", " "); // remove tabs
-    linetext = replaceAll(linetext, "  ", "");
-    var linewords = linetext.split(" ");
-    // popup helpful info on terms
-    for(var w=0;w<helpTerms.length;w++){
-      if(helpTerms[w].name.indexOf(" ") > -1){
-        // terms like void setup where both words appear & appear in order
-        // for example "void setup"
-        var helplist = helpTerms[w].name.split(" ");
-        var foundAll = true;
-        var lastIndex = 0;
-        for(var m=0;m<helplist.length;m++){
-          if(linewords.indexOf(helplist[m]) < lastIndex){
-            foundAll = false;
-            break;
-          }
-          else{
-            lastIndex = linewords.indexOf(helplist[m]);
-          }
-        }
-        if(foundAll){
-          return showPopup( linenum, helpTerms[w] );
-        }
-      }
-      else{
-        if(linewords.indexOf(helpTerms[w].name) > -1){
-          return showPopup( linenum, helpTerms[w] );
-        }
-      }
-    }
- // };
-}
-function showPopup( linenum, term ){
-  //console.log( term );
-  $( $(".CodeMirror-lines > div > div > pre")[linenum+1] ).popover({
-  //$(".CodeMirror").popover({
-    title: term.name,
-    content: term.about
-  })
-  .popover('show');
-  setTimeout(function(){
-    $(".popover").animate({
-      left: "640px"
-    }, 500);
+    restart();
   }, 250);
 }
 function traceSource(){
@@ -96,4 +31,195 @@ function replaceAll(str,oldr,newr){
     str = str.replace(oldr,newr);
   }
   return str;
+}
+
+document.getElementById('map').style.height = document.getElementById('map').parentElement.parentElement.offsetHeight + "px";
+
+var map = new google.maps.Map( document.getElementById('map'), {
+  zoom: 8,
+  center: new google.maps.LatLng(-34, 150),
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+});
+var geocoder = new google.maps.Geocoder();
+var infowindow = new google.maps.InfoWindow();
+google.maps.event.addListener(map, 'click', function(e){
+  infowindow.close();
+});
+
+var scope = "toplevel";
+var codelines = document.querySelectorAll(".CodeMirror-lines pre");
+
+var allshapes = [ ];
+var latlngs = [ ];
+var content = "";
+var color = "";
+
+var processLine = function(c){
+
+  if(c > codelines.length - 1){
+    return;
+  }
+
+  var line = codelines[c].textContent.toLowerCase();
+
+  // moving between levels of code
+  if(scope == "toplevel"){
+    if(line.indexOf("map") > -1){
+      scope = "map";
+    }
+    return processLine(c+1);
+  }
+  else if(scope == "map"){
+    
+    if(line.indexOf("marker") > -1){
+      scope = "marker";
+      return processLine(c+1);
+    }
+    if(line.indexOf("line") > -1){
+      scope = "line";
+      return processLine(c+1);
+    }
+    if(line.indexOf("shape") > -1){
+      scope = "shape";
+      return processLine(c+1);
+    }
+    
+    if((line.indexOf("plz") > -1) || (line.indexOf("please") > -1)){
+      scope = "toplevel";
+      return;
+    }
+  }
+  else if((scope == "marker") || (scope == "line") || (scope == "shape")){
+    if((line.indexOf("plz") > -1) || (line.indexOf("please") > -1)){
+      var shape = null;
+      var oldlls = latlngs.concat();
+      if( scope == "marker" ){
+        shape = new google.maps.Marker({
+          position: latlngs[0],
+          map: map,
+          clickable: !(!content.length)
+        });
+      }
+      else if( scope == "line" ){
+        shape = new google.maps.Polyline({
+          path: latlngs,
+          map: map,
+          clickable: !(!content.length),
+          strokeColor: (color || null)
+        });
+      }
+      else if( scope == "shape" ){
+        shape = new google.maps.Polygon({
+          paths: latlngs,
+          map: map,
+          clickable: !(!content.length),
+          strokeColor: (color || null)
+        });
+      }
+      if(shape){
+        addClickable(shape, oldlls[0], content);
+        allshapes.push(shape);
+      }
+      scope = "map";
+      content = "";
+      color = "";
+      latlngs = [ ];
+      return processLine(c+1);
+    }
+  }
+  
+  // reading a geocode
+  if( codelines[c].children && codelines[c].children.length && (codelines[c].children[0].textContent == "@") ){
+    for(var n=1;n<codelines[c].children.length;n++){
+      if(codelines[c].children[n].className == "cm-string"){
+        var geocodethis = codelines[c].children[n].textContent;
+        geocodethis = geocodethis.substring(1, geocodethis.length - 1);
+        
+        geocoder.geocode( { 'address': geocodethis }, function(results, status){
+          if(status == google.maps.GeocoderStatus.OK){
+            if(scope == "map"){
+              map.fitBounds( results[0].geometry.viewport );
+            }
+            else{
+              latlngs.push( results[0].geometry.location );
+            }
+          }
+          return processLine(c+1);
+        });
+        return;
+      }
+    }
+    return processLine(c+1);
+  }
+  
+  // reading a color
+  if( codelines[c].children && codelines[c].children.length && (codelines[c].children[0].textContent[0] == "#") ){
+    color = codelines[c].children[0].textContent;
+    return processLine(c+1);
+  }
+  
+  // reading a raw string (probably text for a popup)
+  if(line.indexOf('"') > -1){
+    for(var n=0;n<codelines[c].children.length;n++){
+      if(codelines[c].children[n].className == "cm-string"){
+        content = codelines[c].children[n].textContent;
+        content = content.substring(1, content.length - 1);
+        return processLine(c+1);
+      }
+    }
+  }
+    
+  // reading a latlng
+  if((line.indexOf("[") > -1) && (line.indexOf(",") > -1) && (line.indexOf("]") > -1)){
+    var sign = 1.0;
+    var latlng = [ ];
+    var numbers = codelines[c].children;
+    for(var n=0;n<numbers.length;n++){
+      if(numbers[n].textContent == "-"){
+        sign *= -1.0;
+      }
+      else{
+        var samp = 1.0 * sign * numbers[n].textContent;
+        if( !isNaN( samp ) ){
+          latlng.push( samp );
+          sign = 1;
+        }
+      }
+    }
+    
+    if(latlng.length != 2){
+      return processLine(c+1);
+    }
+    
+    if(scope == "map"){
+      map.setCenter( new google.maps.LatLng( latlng[0], latlng[1] ) );
+    }
+    else if(scope == "marker" || scope == "line" || scope == "shape"){
+      latlngs.push( new google.maps.LatLng( latlng[0], latlng[1] ) );
+    }
+
+    return processLine(c+1);
+  }
+  
+  return processLine(c+1);
+};
+
+function addClickable(shape, ll, content){
+  google.maps.event.addListener(shape, 'click', function(){
+    infowindow.setContent( content );
+    infowindow.setPosition( ll );
+    infowindow.open(map);
+  });
+}
+
+function restart(){
+  for(var s=0;s<allshapes.length;s++){
+    allshapes[s].setMap(null);
+  }
+  allshapes = [ ];
+
+  scope = "toplevel";
+  codelines = document.querySelectorAll(".CodeMirror-lines pre");
+
+  processLine(0);
 }

@@ -1,42 +1,35 @@
 head
   title MapPLZ: Coding
-  script(type="text/javascript", src="/scripts/codemirror.js")
-  script(type="text/javascript", src="/scripts/clike.js")
-  script(type="text/javascript", src="/scripts/jquery-1.7.2.min.js")
-  //
-    script(type="text/javascript", src="/scripts/bootstrap.min.js")
-  script(type="text/javascript", src="/scripts/helpterms.js")
-  script(type="text/javascript", src="/scripts/viewprogram.js")
   link(type="text/css", rel="stylesheet", href="/stylesheets/journal.min.css")
-  script(type="text/javascript") program_id = "#{program.id}";
   link(type="text/css", rel="stylesheet", href="/stylesheets/textcode.css")
   link(type="text/css", rel="stylesheet", href="/stylesheets/codemirror.css")
   style(type="text/css") a{ color:#44a; } .navbar{ zoom: 0.6; } .CodeMirror {border: 2px inset #dee;} .CodeMirror-scroll{ height: auto; overflow: visible; } .popover-title{ font-size: 18px; }
+  script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false")
+  style(type="text/css") p, #map{ color: #444; } a{ color: #44f } .hero-unit{ text-align: center; padding: 30px; background: rgb( 149, 177, 213 ); } img{ max-width: none !important; }
 
 body(style="background-color:#444;")
-  div.navbar
+  .navbar
     .navbar-inner
       .container
         a.brand(href="/", style="text-transform:none;") MapPLZ
         a.brand(href="/code-env")
           u New Program
 
-  div.container(style="padding:30px;background-color:#fff;")
-    div.row
-      div.span7
-        h3 Program Viewer
+  .container(style="padding:30px;background-color:#fff;")
+    .row
+      .span6
+        h3 MapPLZ !
         br
-        h4 #{program.name}
+        h4 Running #{program.name}
         br
         textarea.span10#sketchplace(name="mysketch") #{program.code}
-      div.span5
+    
+      .span6
+        #map
+
+    .row
+      .span6
         div(style="margin-left:15px;")
-          - if (program.xml)
-            h4 View Blocks
-            a(href="/blockly/demos/code/index.html?id=#{program.id}")
-              span Visual Code
-              br
-              img(src="http://i.imgur.com/tQRIi.png", style="width:80px;")
 
           h4 Adopt &amp; Adapt
           a(href="/code-env/from/#{program.id}") Fork this program
@@ -57,6 +50,9 @@ body(style="background-color:#444;")
           ul#users.spacedlist
             li
               span #{author}
-          
-          h4 Data Outputs
-          ul#runs.spacedlist
+
+  script(type="text/javascript", src="/scripts/codemirror.js")
+  script(type="text/javascript", src="/scripts/ruby.js")
+  script(type="text/javascript", src="/scripts/jquery-1.7.2.min.js")
+  script(type="text/javascript") program_id = "#{program.id}";
+  script(type="text/javascript", src="/scripts/viewprogram.js")
