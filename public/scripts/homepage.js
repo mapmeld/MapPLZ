@@ -84,7 +84,8 @@ var processLine = function(c){
           paths: latlngs,
           map: map,
           clickable: !(!content.length),
-          strokeColor: (color || null)
+          strokeColor: (color || null),
+          fillColor: (color || null)
         });
       }
       if(shape){
