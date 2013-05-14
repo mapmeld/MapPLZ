@@ -182,8 +182,21 @@ var processLine = function(c){
       else{
         var samp = 1.0 * sign * numbers[n].textContent;
         if( !isNaN( samp ) ){
-          latlng.push( samp );
-          sign = 1;
+          
+          if(n > 0 && numbers[n-1].textContent == "."){
+            var frac = "0." + numbers[n].textContent;
+            frac *= 1.0;
+            if(latlng[ latlng.length - 1 ] > 0){
+              latlng[ latlng.length - 1 ] += frac;            
+            }
+            else{
+              latlng[ latlng.length - 1 ] -= frac;
+            }
+          }
+          else{
+            latlng.push( samp );
+            sign = 1;
+          }
         }
       }
     }
