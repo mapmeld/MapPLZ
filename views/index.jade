@@ -3,7 +3,7 @@ head
   link(type="text/css", rel="stylesheet", href="/stylesheets/journal.min.css")
   link(type="text/css", rel="stylesheet", href="/stylesheets/codemirror.css")
   style(type="text/css") .CodeMirror {border: 2px solid #000; } .CodeMirror-scroll{ height: auto; overflow: visible; }
-  style(type="text/css") p, a, #map{ color: #444; } .hero-unit{ text-align: center; padding: 30px; background: rgb( 149, 177, 213 ); } img{ max-width: none !important; }
+  style(type="text/css") p, #map{ color: #444; } a{ color: #44f } .hero-unit{ text-align: center; padding: 30px; background: rgb( 149, 177, 213 ); } img{ max-width: none !important; }
   script(type="text/javascript") if(window.location.indexOf("www.mapplz") == -1){ window.location = "http://www.mapplz.com" }
   script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false")
 body
@@ -24,7 +24,7 @@ body
     br
     br
     
-    .row
+    .row    
       .span6
         h3 Alternatives
         p There are much better ways to make maps on the internet. Use these point-and-click and spreadsheet-based tools.
@@ -35,6 +35,11 @@ body
             a(href="https://support.google.com/fusiontables/answer/2527132") Maps in Fusion Tables
           li
             a(href="http://support.google.com/maps/bin/answer.py?hl=en&answer=62843") Google MyMaps
+
+      .span5.well
+        h3 Open Source
+        p A Node.js / Express server with a Neo4j database (for when people start writing their own programs)
+        a(href="https://github.com/mapmeld/MapPLZ") Source Code on GitHub
 
   script(type="text/javascript", src="/scripts/codemirror.js")
   script(type="text/javascript", src="/scripts/ruby.js")
