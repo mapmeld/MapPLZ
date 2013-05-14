@@ -14,7 +14,7 @@ function init(){
   }, 250);
   if(!($("#sketchplace").val().length)){
     myCodeMirror.setValue('map\n  @ "Florida"\n\n  marker\n    @ "Disney World"\n\n  plz\n\nplz');
-  }  
+  }
 
   setInterval(function(){
     var selectedLine = myCodeMirror.getCursor().line;

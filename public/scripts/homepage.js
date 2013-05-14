@@ -18,7 +18,7 @@ google.maps.event.addListener(map, 'click', function(e){
 });
 
 var scope = "toplevel";
-var codelines = document.querySelectorAll(".CodeMirror-lines pre");
+var codelines = $(".CodeMirror-lines pre");
 
 var allshapes = [ ];
 var latlngs = [ ];
@@ -192,7 +192,7 @@ function restart(){
   allshapes = [ ];
 
   scope = "toplevel";
-  codelines = document.querySelectorAll(".CodeMirror-lines pre");
+  codelines = $(".CodeMirror-lines pre");
 
   processLine(0);
 }
