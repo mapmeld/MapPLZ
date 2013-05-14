@@ -1,0 +1,100 @@
+head
+  title MapPLZ: Coding
+  script(type="text/javascript", src="/scripts/codemirror.js")
+  script(type="text/javascript", src="/scripts/ruby.js")
+  script(type="text/javascript", src="/scripts/jquery-1.7.2.min.js")
+  //
+    script(type="text/javascript", src="/scripts/bootstrap.min.js")
+  script(type="text/javascript", src="/scripts/helpterms.js")
+  script(type="text/javascript", src="/scripts/textcode.js")
+  link(type="text/css", rel="stylesheet", href="/stylesheets/journal.min.css")
+  link(type="text/css", rel="stylesheet", href="/stylesheets/textcode.css")
+  link(type="text/css", rel="stylesheet", href="/stylesheets/codemirror.css")
+  style(type="text/css") .CodeMirror {border: 2px inset #dee;} .CodeMirror-scroll{ height: auto; overflow: visible; } .popover-title{ font-size: 18px; }
+
+body(style="background-color:#444;")
+  div.container(style="padding:30px;background-color:#fff;")
+    div.row
+      div.span7
+        form#submitcode(accept-charset="UTF-8", action="/program", method="post")
+          h3 Write a Program
+          br
+          h4(style="display:inline;margin-right:20px;") Sketch Name
+          input.x-large(name="sketchname")
+          //
+            h3 Optional contact: Twitter (@mapmeld) or e-mail (you@example.com)
+            input(name="identify", width="400", size="30")
+            br
+            h3(style="display:inline;margin-right:20px;") Data streaming
+            label
+              input#dostream(type="checkbox", name="dostream", checked="checked")
+              span Stream data?
+            label
+              input#dosend(type="checkbox", name="dosend")
+              span Send data log?
+          br
+          br
+          h4(style="display:inline;margin-right:20px;") Write Sketch or Select:
+          - if (program == null)
+            select#samples(href='#', onchange='writeSample()')
+              option(value="none") -
+              option(value="blink") Blink Test
+              option(value="sensor") Sensor Test
+              option(value="servo") Motor Test
+              option(value="hello") Stream Test
+              option(value="random") Random Blink
+              option(value="streamer") Data Streamer
+            br
+            textarea.span10#sketchplace(name="mysketch")
+          - else
+            br
+            input(type="hidden", name="basedon", value="#{program.id}")
+            textarea.span10#sketchplace(name="mysketch") #{program.code}
+          br
+          a.btn.btn-primary(href="#", onclick="sendSketch()") Send Sketch
+      div.span5
+        div(style="margin-left:15px;")
+          h4 Reference
+          ul.spacedlist
+            li
+              span pinMode( PIN# , INPUT or OUTPUT )
+              br
+              span(style="color:#333;") prepares a pin to read or write information
+            li
+              span digitalWrite( PIN# , HIGH or LOW )
+              br
+              span(style="color:#333;") turns the pin on or off
+            li(style="padding-bottom:5px;border-bottom:1px solid silver;")
+              span delay( milliseconds )
+              br
+              span(style="color:#333;") waits before continuing to the next line
+            li
+              span analogRead( PIN# )
+              br
+              span(style="color:#333;") returns sensor value from 0 (off) to 1024 (100% on)
+            li(style="padding-bottom:5px;border-bottom:1px solid silver;")
+              span digitalRead( PIN# )
+              br
+              span(style="color:#333;") returns sensor value as HIGH or LOW
+            li
+              span #include &lt;Servo.h&gt;
+              br
+              span Servo myservo;
+              br
+              span(style="color:#333;") paste at start of code to allow motor control
+            li
+              span myservo.attach(9);
+              br
+              span(style="color:#333;") Prepare servo motor inside setup
+            li(style="padding-bottom:5px;border-bottom:1px solid silver;")
+              span myservo.write( 0 <= val <= 179 )
+              br
+              span(style="color:#333;") Turn servo motor to 0-179 degrees
+            li
+              span Serial.begin( 9600 )
+              br
+              span(style="color:#333;") connect computer and Arduino over USB/serial port
+            li
+              span Serial.println( # or "" )
+              br
+              span(style="color:#333;") output a message (number or text) to the computer

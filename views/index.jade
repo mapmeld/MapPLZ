@@ -1,0 +1,40 @@
+head
+  title MapPLZ
+  link(type="text/css", rel="stylesheet", href="/stylesheets/journal.min.css")
+  link(type="text/css", rel="stylesheet", href="/stylesheets/codemirror.css")
+  style(type="text/css") .CodeMirror {border: 2px solid #000; } .CodeMirror-scroll{ height: auto; overflow: visible; }
+  style(type="text/css") p, a, #map{ color: #444; } .hero-unit{ text-align: center; padding: 30px; background: rgb( 149, 177, 213 ); } img{ max-width: none !important; }
+  script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false")
+body
+  div.container
+    .row
+      .span8.offset2
+        .hero-unit.text-center
+          h1 MapPLZ
+    .row(style="height:auto;")
+      .span6(style="height:auto;")
+        h3 Sample Code
+        textarea#sketchplace
+        a.btn.btn-success(onclick="restart();") Restart
+    
+      .span6
+        #map
+    
+    br
+    br
+    
+    .row
+      .span6
+        h3 Alternatives
+        p There are much better ways to make maps on the internet. Use these point-and-click and spreadsheet-based tools.
+        ul
+          li
+            a(href="http://www.google.com/earth/outreach/tutorials/spreadsheet3.html") Google Spreadsheet Mapper
+          li
+            a(href="https://support.google.com/fusiontables/answer/2527132") Maps in Fusion Tables
+          li
+            a(href="http://support.google.com/maps/bin/answer.py?hl=en&answer=62843") Google MyMaps
+
+  script(type="text/javascript", src="/scripts/codemirror.js")
+  script(type="text/javascript", src="/scripts/ruby.js")
+  script(type="text/javascript", src="/scripts/homepage.js")
