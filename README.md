@@ -102,7 +102,7 @@ You can add a hexadecimal color (such as #f00 or #ff0000) to lines and shapes:
       [ 0, 0 ]
       @ "Pittsburgh, PA"
       "Write a message"
-      <strong>#f00</strong>
+      #f00
     plz
 
 ## Setup
