@@ -2,7 +2,7 @@ var myCodeMirror = CodeMirror.fromTextArea( document.getElementById("sketchplace
   matchBrackets: true,
   mode: "text/x-ruby"
 });
-myCodeMirror.setValue('(Inspired by LOL Code)\n(http://en.wikipedia.org/wiki/LOLCODE)\n\nmap\n \n  @ "New York City, NY"\n \n  marker\n    "MoMA"\n    @ "11 W 53rd St, New York City, NY"\n  plz\n \n  marker\n    [ 40.689262, -74.044451 ]\n    "Statue of Liberty"\n  plz\n \n  line\n    #f00\n    [ 0, 0 ]\n    [ 10, 10 ]\n  plz\n\nplz');
+startOver();
 
 document.getElementById('map').style.height = document.getElementById('map').parentElement.parentElement.offsetHeight + "px";
 
@@ -107,7 +107,12 @@ var processLine = function(c){
         });
       }
       if(shape){
-        addClickable(shape, oldlls[0], content);
+        if(latlngs.length > 1){
+          addClickable(shape, oldlls[0], content);
+        }
+        else{
+          addClickable(shape, null, content);        
+        }
         allshapes.push(shape);
       }
       scope = "map";
@@ -232,8 +237,13 @@ setInterval(function(){
 function addClickable(shape, ll, content){
   google.maps.event.addListener(shape, 'click', function(){
     infowindow.setContent( content );
-    infowindow.setPosition( ll );
-    infowindow.open(map);
+    if(ll){
+      infowindow.setPosition( ll );
+      infowindow.open(map);
+    }
+    else{
+      infowindow.open(map, shape);
+    }
   });
 }
 

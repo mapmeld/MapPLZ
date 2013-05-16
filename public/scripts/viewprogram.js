@@ -119,7 +119,12 @@ var processLine = function(c){
         });
       }
       if(shape){
-        addClickable(shape, oldlls[0], content);
+        if(latlngs.length > 1){
+          addClickable(shape, oldlls[0], content);
+        }
+        else{
+          addClickable(shape, null, content);        
+        }
         allshapes.push(shape);
       }
       scope = "map";
@@ -222,8 +227,13 @@ var processLine = function(c){
 function addClickable(shape, ll, content){
   google.maps.event.addListener(shape, 'click', function(){
     infowindow.setContent( content );
-    infowindow.setPosition( ll );
-    infowindow.open(map);
+    if(ll){
+      infowindow.setPosition( ll );
+      infowindow.open(map);
+    }
+    else{
+      infowindow.open(map, shape);
+    }
   });
 }
 
