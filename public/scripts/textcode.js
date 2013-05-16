@@ -84,7 +84,7 @@ function writeSample(){
       sketch = '(Map of New York landmarks)\n\nmap\n \n  @ "New York City, NY"\n \n  marker\n    "MoMA"\n    @ "11 W 53rd St, New York City, NY"\n  plz\n \n  marker\n    [ 40.689262, -74.044451 ]\n    "Statue of Liberty"\n  plz\n\nplz';
       break;
     case "roadtrip":
-      sketch = '(Here\'s where we went on a road trip)\nmap\n  line\n    "San Francisco, CA"\n    "Santa Cruz, CA"\n    "Monterey, CA"\n    "Redlands, CA"\n  plz\nplz\n';
+      sketch = '(Here\'s where we went on a road trip)\nmap\n  line\n    @ "San Francisco, CA"\n    @ "Santa Cruz, CA"\n    @ "Monterey, CA"\n    @ "Redlands, CA"\n  plz\nplz\n';
       break;
     case "triangles":
       sketch = 'map\n  shape\n    [ 30.5, 30 ]\n    [ 29.5, 29.5 ]\n    [ 30.9, 29.5 ]\n  plz\n  shape\n    #f00\n    [ 28, 28 ]\n    [ 27.5, 24.5 ]\n    [ 30.5, 25.5 ]\n  plz\n  shape\n    #f0f\n    [ 23, 28 ]\n    [ 25.5, 34.5 ]\n    [ 28.5, 30.5 ]\n  plz\nplz';
