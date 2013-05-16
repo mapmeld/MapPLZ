@@ -8,6 +8,22 @@ document.getElementById('map').style.height = document.getElementById('map').par
 
 google.maps.visualRefresh=true;
 
+knownGeoResults = {
+  "new york city, ny": {
+    geometry: {
+      viewport: new google.maps.LatLngBounds(
+        new google.maps.LatLng(40.4959143, -74.2557349),
+        new google.maps.LatLng(40.9152414, -73.700272)
+      )
+    }
+  },
+  "11 w 53rd st, new york city, ny": {
+    geometry: {
+      location: new google.maps.LatLng(40.7614029,-73.9776248)
+    }
+  }
+}
+
 var map = new google.maps.Map( document.getElementById('map'), {
   zoom: 8,
   center: new google.maps.LatLng(-34, 150),
@@ -108,18 +124,30 @@ var processLine = function(c){
       if(codelines[c].children[n].className == "cm-string"){
         var geocodethis = codelines[c].children[n].textContent;
         geocodethis = geocodethis.substring(1, geocodethis.length - 1);
-        
-        geocoder.geocode( { 'address': geocodethis }, function(results, status){
-          if(status == google.maps.GeocoderStatus.OK){
-            if(scope == "map"){
-              map.fitBounds( results[0].geometry.viewport );
-            }
-            else{
-              latlngs.push( results[0].geometry.location );
-            }
+        if( knownGeoResults[ geocodethis.toLowerCase() ] ){
+          results = [ knownGeoResults[ geocodethis.toLowerCase() ] ];
+          if(scope == "map"){
+            map.fitBounds( results[0].geometry.viewport );
+          }
+          else{
+            latlngs.push( results[0].geometry.location );
           }
           return processLine(c+1);
-        });
+        }
+        else{
+          geocoder.geocode( { 'address': geocodethis }, function(results, status){
+            if(status == google.maps.GeocoderStatus.OK){
+              knownGeoResults[ geocodethis.toLowerCase() ] = results[0];
+              if(scope == "map"){
+                map.fitBounds( results[0].geometry.viewport );
+              }
+              else{
+                latlngs.push( results[0].geometry.location );
+              }
+            }
+            return processLine(c+1);
+          });
+        }
         return;
       }
     }
@@ -191,6 +219,15 @@ var processLine = function(c){
 };
 
 processLine(0);
+var lastcode = myCodeMirror.getValue();
+var refreshTimeout = null;
+setInterval(function(){
+  if(lastcode != myCodeMirror.getValue()){
+    lastcode = myCodeMirror.getValue();
+    window.clearTimeout(refreshTimeout);
+    refreshTimeout = setTimeout(restart, 250);
+  }
+}, 100);
 
 function addClickable(shape, ll, content){
   google.maps.event.addListener(shape, 'click', function(){
@@ -198,6 +235,10 @@ function addClickable(shape, ll, content){
     infowindow.setPosition( ll );
     infowindow.open(map);
   });
+}
+
+function startOver(){
+  myCodeMirror.setValue('(Inspired by LOL Code)\n(http://en.wikipedia.org/wiki/LOLCODE)\n\nmap\n \n  @ "New York City, NY"\n \n  marker\n    "MoMA"\n    @ "11 W 53rd St, New York City, NY"\n  plz\n \n  marker\n    [ 40.689262, -74.044451 ]\n    "Statue of Liberty"\n  plz\n \n  line\n    #f00\n    [ 0, 0 ]\n    [ 10, 10 ]\n  plz\n\nplz');
 }
 
 function restart(){
