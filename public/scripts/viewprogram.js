@@ -35,6 +35,7 @@ function replaceAll(str,oldr,newr){
 
 document.getElementById('map').style.height = document.getElementById('map').parentElement.parentElement.offsetHeight + "px";
 
+google.maps.visualRefresh=true;
 var map = new google.maps.Map( document.getElementById('map'), {
   zoom: 8,
   center: new google.maps.LatLng(-34, 150),
