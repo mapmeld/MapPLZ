@@ -5,6 +5,7 @@ var content = "";
 var color = "";
 var codelines;
 var knownGeoResults = { };
+var bounds = [180, 90, -180, -90]; // xmin, ymin, xmax, ymax
 
 google.maps.visualRefresh=true;
 var map = new google.maps.Map( document.getElementById('map'), {
@@ -52,6 +53,19 @@ var processLine = function(c){
     
     if((line.indexOf("plz") > -1) || (line.indexOf("please") > -1)){
       scope = "toplevel";
+      if(bounds){
+        if( bounds[0] == bounds[2] && bounds[1] == bounds[3] ){
+          // one point
+          map.setCenter( new google.maps.LatLng( bounds[1], bounds[0] ) );
+        }
+        else if( bounds[0] <  bounds[2] ){
+          // many points
+          map.fitBounds( new google.maps.LatLngBounds(
+            new google.maps.LatLng( bounds[1], bounds[0] ),
+            new google.maps.LatLng( bounds[3], bounds[2] )
+          ));
+        }
+      }
       return;
     }
   }
@@ -110,9 +124,11 @@ var processLine = function(c){
           results = [ knownGeoResults[ geocodethis.toLowerCase() ] ];
           if(scope == "map"){
             map.fitBounds( results[0].geometry.viewport );
+            bounds = null;
           }
           else{
             latlngs.push( results[0].geometry.location );
+            adjustBounds( results[0].geometry.location );
           }
           return processLine(c+1);
         }
@@ -122,9 +138,11 @@ var processLine = function(c){
               knownGeoResults[ geocodethis.toLowerCase() ] = results[0];
               if(scope == "map"){
                 map.fitBounds( results[0].geometry.viewport );
+                bounds = null;
               }
               else{
                 latlngs.push( results[0].geometry.location );
+                adjustBounds( results[0].geometry.location );
               }
             }
             return processLine(c+1);
@@ -192,6 +210,7 @@ var processLine = function(c){
     }
     else if(scope == "marker" || scope == "line" || scope == "shape"){
       latlngs.push( new google.maps.LatLng( latlng[0], latlng[1] ) );
+      adjustBounds( latlng );
     }
 
     return processLine(c+1);
@@ -200,6 +219,28 @@ var processLine = function(c){
   return processLine(c+1);
 };
 
+function adjustBounds(coord){
+  if(bounds){
+    if(typeof coord.lat != "undefined"){
+      // xmin, ymin, xmax, ymax
+      bounds = [
+        Math.min( bounds[0], coord.lng() ),
+        Math.min( bounds[1], coord.lat() ),
+        Math.max( bounds[2], coord.lng() ),
+        Math.max( bounds[3], coord.lat() )
+      ];
+    }
+    else{
+      // xmin, ymin, xmax, ymax
+      bounds = [
+        Math.min( bounds[0], coord[1] ),
+        Math.min( bounds[1], coord[0] ),
+        Math.max( bounds[2], coord[1] ),
+        Math.max( bounds[3], coord[0] )
+      ];
+    }
+  }
+}
 
 function addClickable(shape, ll, content){
   google.maps.event.addListener(shape, 'click', function(){
@@ -219,6 +260,7 @@ function restart(){
     allshapes[s].setMap(null);
   }
   allshapes = [ ];
+  bounds = [180, 90, -180, -90];
   scope = "toplevel";
   processLine(0);
 }

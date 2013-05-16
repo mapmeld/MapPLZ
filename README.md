@@ -66,6 +66,20 @@ Center your map with a written location or coordinates. Here are two examples:
       [ 40, -70 ]
     plz
 
+If you don't set a center of your map, it will try to display all markers, lines, and shapes
+
+    map
+      line
+        @ "San Francisco, CA"
+        @ "Santa Cruz, CA"
+      plz
+      
+      line
+        @ "San Francisco, CA"
+        @ "Berkeley, CA"
+      plz
+    plz
+
 ### Markers
 
 Place a red Google Maps marker at a coordinate:
