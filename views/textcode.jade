@@ -1,14 +1,10 @@
 head
   title MapPLZ: Coding
-  script(type="text/javascript", src="/scripts/codemirror.js")
-  script(type="text/javascript", src="/scripts/ruby.js")
-  script(type="text/javascript", src="/scripts/jquery-1.7.2.min.js")
-  script(type="text/javascript", src="/scripts/helpterms.js")
-  script(type="text/javascript", src="/scripts/textcode.js")
   link(type="text/css", rel="stylesheet", href="/stylesheets/journal.min.css")
   link(type="text/css", rel="stylesheet", href="/stylesheets/textcode.css")
   link(type="text/css", rel="stylesheet", href="/stylesheets/codemirror.css")
   style(type="text/css") .CodeMirror {border: 2px inset #dee;} .CodeMirror-scroll{ height: auto; overflow: visible; } .popover-title{ font-size: 18px; }
+  script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false")
 
 body(style="background-color:#444;")
   div.container(style="padding:30px;background-color:#fff;")
@@ -32,18 +28,15 @@ body(style="background-color:#444;")
               span Send data log?
           br
           br
-          h4(style="display:inline;margin-right:20px;") Write Sketch:
+          h4(style="display:inline;margin-right:20px;") Write Sketch or Select:
           - if (program == null)
-            //
-              select#samples(href='#', onchange='writeSample()')
-                option(value="none") -
-                option(value="blink") Blink Test
-                option(value="sensor") Sensor Test
-                option(value="servo") Motor Test
-                option(value="hello") Stream Test
-                option(value="random") Random Blink
-                option(value="streamer") Data Streamer
-              br
+            select#samples(href='#', onchange='writeSample()')
+              option(value="none") -
+              option(value="florida") Florida
+              option(value="nyc") New York
+              option(value="roadtrip") Road Trip
+              option(value="triangles") Triangles
+            br
             textarea.span10#sketchplace(name="mysketch")
           - else
             br
@@ -52,62 +45,78 @@ body(style="background-color:#444;")
           br
           a.btn.btn-primary(href="#", onclick="sendSketch()") Send Sketch
       div.span5
-        div(style="margin-left:15px;")
-          h4 Reference
-          ul.spacedlist
+        div.tabbable(style="margin-left:15px;")
+          ul.nav.nav-tabs
+            li.active
+              a#livemap(href="#maptab", data-toggle="tab") Map
             li
-              span(style="font-family:arial;color:#000;") Make a map centered on San Francisco
-              br
-              span map
-              br
-              span &nbsp;&nbsp;@ "San Francisco, CA"
-              br
-              span plz
-            li
-              span(style="font-family:arial;color:#000;") Make a map centered on 40 North, 70 West
-              br
-              span map
-              br
-              span &nbsp;&nbsp;[ 40, -70 ]
-              br
-              span plz
-            li
-              span(style="font-family:arial;color:#000;") Add a clickable marker in Washington, DC
-              br
-              span map
-              br
-              span &nbsp;&nbsp;@ "Washington, DC"
-              br
-              span &nbsp;&nbsp;marker
-              br
-              span &nbsp;&nbsp;&nbsp;&nbsp;"White House"
-              br
-              span &nbsp;&nbsp;&nbsp;&nbsp;@ "1600 Pennsylvania Ave, DC"
-              br
-              span &nbsp;&nbsp;plz
-              br
-              span plz
-            li
-              span(style="font-family:arial;color:#000;") Place inside map to draw a line
-              br
-              span line
-              br
-              span &nbsp;&nbsp;[ 0, -10 ]
-              br
-              span &nbsp;&nbsp;[ 5, -5 ]
-              br
-              span plz
-            li
-              span(style="font-family:arial;color:#000;") Place inside map to draw a colorful shape
-              br
-              span shape
-              br
-              span &nbsp;&nbsp;#ff0000
-              br
-              span &nbsp;&nbsp;[ 40, -0.5 ]
-              br
-              span &nbsp;&nbsp;[ 40.4, -0.4 ]
-              br
-              span &nbsp;&nbsp;[ 40.2, 0.3 ]
-              br
-              span plz
+              a#help(href="#helptab", data-toggle="tab") Help
+          div.tab-content
+            #maptab.tab-pane.active
+              div#map
+            #helptab.tab-pane
+              ul.spacedlist
+                li
+                  span(style="font-family:arial;color:#000;") Make a map centered on San Francisco
+                  br
+                  span map
+                  br
+                  span &nbsp;&nbsp;@ "San Francisco, CA"
+                  br
+                  span plz
+                li
+                  span(style="font-family:arial;color:#000;") Make a map centered on 40 North, 70 West
+                  br
+                  span map
+                  br
+                  span &nbsp;&nbsp;[ 40, -70 ]
+                  br
+                  span plz
+                li
+                  span(style="font-family:arial;color:#000;") Add a clickable marker in Washington, DC
+                  br
+                  span map
+                  br
+                  span &nbsp;&nbsp;@ "Washington, DC"
+                  br
+                  span &nbsp;&nbsp;marker
+                  br
+                  span &nbsp;&nbsp;&nbsp;&nbsp;"White House"
+                  br
+                  span &nbsp;&nbsp;&nbsp;&nbsp;@ "1600 Pennsylvania Ave, DC"
+                  br
+                  span &nbsp;&nbsp;plz
+                  br
+                  span plz
+                li
+                  span(style="font-family:arial;color:#000;") Place inside map to draw a line
+                  br
+                  span line
+                  br
+                  span &nbsp;&nbsp;[ 0, -10 ]
+                  br
+                  span &nbsp;&nbsp;[ 5, -5 ]
+                  br
+                  span plz
+                li
+                  span(style="font-family:arial;color:#000;") Place inside map to draw a colorful shape
+                  br
+                  span shape
+                  br
+                  span &nbsp;&nbsp;#ff0000
+                  br
+                  span &nbsp;&nbsp;[ 40, -0.5 ]
+                  br
+                  span &nbsp;&nbsp;[ 40.4, -0.4 ]
+                  br
+                  span &nbsp;&nbsp;[ 40.2, 0.3 ]
+                  br
+                  span plz
+
+  script(type="text/javascript", src="/scripts/codemirror.js")
+  script(type="text/javascript", src="/scripts/ruby.js")
+  script(type="text/javascript", src="/scripts/jquery-1.7.2.min.js")
+  script(type="text/javascript", src="/scripts/helpterms.js")
+  script(type="text/javascript", src="/scripts/bootstrap.min.js")
+  script(type="text/javascript", src="/scripts/mapplz.js")
+  script(type="text/javascript", src="/scripts/textcode.js")
