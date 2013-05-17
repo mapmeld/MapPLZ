@@ -64,6 +64,16 @@ exports.show = function (req, res, next) {
     });
 };
 
+// GET /program/full/:id - fullscreen
+exports.fullscreen = function (req, res, next) {
+    Program.get(req.params.id, function (err, program) {
+        if (err) return next(err);
+		res.render('fullscreen', {
+          program: program
+        });
+    });
+};
+
 // GET /code-env
 // or
 // GET /code-env/from/:id
@@ -89,13 +99,5 @@ exports.historyout = function (req, res, next) {
           if (err) return next(err);
           res.json( history );
         });
-    });
-};
-
-// GET /program/xml/:id
-exports.xmlout = function (req, res, next) {
-    Program.get(req.params.id, function (err, program) {
-        if (err) return next(err);
-        res.json( { xml: (program.xml || "") } );
     });
 };

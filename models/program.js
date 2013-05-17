@@ -45,7 +45,6 @@ proxyProperty('exists');
 
 proxyProperty('name', true);
 proxyProperty('code', true);
-proxyProperty('xml', true);
 
 // private instance methods:
 

@@ -1,0 +1,14 @@
+head
+  title MapPLZ: Map
+  script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false")
+  style(type="text/css") html, body, #map{ height: 98%; width: 100%; overflow: hidden; } .CodeMirror, #code{ display: hidden; }
+
+body
+  #map
+  textarea#sketchplace #{program.code}
+
+  script(type="text/javascript", src="/scripts/codemirror.js")
+  script(type="text/javascript", src="/scripts/ruby.js")
+  script(type="text/javascript", src="/scripts/jquery-1.7.2.min.js")
+  script(type="text/javascript", src="/scripts/mapplz.js")
+  script(type="text/javascript", src="/scripts/fullscreen.js")

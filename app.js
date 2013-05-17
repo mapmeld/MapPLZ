@@ -48,8 +48,8 @@ app.post('/users/:id/follow', routes.users.follow);
 app.post('/users/:id/unfollow', routes.users.unfollow);
 
 app.post('/program', routes.program.create);
-app.get('/program/xml/:id', routes.program.xmlout);
 app.get('/program/history/:id', routes.program.historyout);
+app.get('/program/full/:id', routes.program.fullscreen);
 app.get('/program/:id', routes.program.show);
 
 app.get('/code-env/from/:id', routes.program.code);
