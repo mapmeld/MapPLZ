@@ -36,7 +36,7 @@ setInterval(function(){
 }, 100);
 
 function startOver(){
-  myCodeMirror.setValue('(Inspired by LOL Code)\n(http://en.wikipedia.org/wiki/LOLCODE)\n\nmap\n \n  @ "New York City, NY"\n \n  marker\n    "MoMA"\n    @ "11 W 53rd St, New York City, NY"\n  plz\n \n  marker\n    [ 40.689262, -74.044451 ]\n    "Statue of Liberty"\n  plz\n \n  line\n    #f00\n    [ 0, 0 ]\n    [ 40.4, -73.8 ]\n  plz\n\nplz');
+  myCodeMirror.setValue('(Inspired by LOL Code)\n\nmap\n \n  @ "New York City, NY"\n \n  marker\n    "MoMA"\n    @ "11 W 53rd St, New York City, NY"\n  plz\n \n  marker\n    [ 40.689262, -74.044451 ]\n    "Statue of Liberty"\n  plz\n \n  line\n    #f00\n    [ 0, 0 ]\n    [ 40.4, -73.8 ]\n  plz\n\nplz');
 }
 
 codelines = $(".CodeMirror-lines pre");
