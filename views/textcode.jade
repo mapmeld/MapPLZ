@@ -29,14 +29,15 @@ body(style="background-color:#444;")
           br
           br
           h4(style="display:inline;margin-right:20px;") Write Sketch or Select:
+          select#samples(href='#', onchange='writeSample()')
+            option(value="none") -
+            option(value="florida") Florida
+            option(value="nyc") New York
+            option(value="roadtrip") Road Trip
+            option(value="triangles") Triangles
+            option(value="button") Button
+          br
           - if (program == null)
-            select#samples(href='#', onchange='writeSample()')
-              option(value="none") -
-              option(value="florida") Florida
-              option(value="nyc") New York
-              option(value="roadtrip") Road Trip
-              option(value="triangles") Triangles
-            br
             textarea.span10#sketchplace(name="mysketch")
           - else
             br

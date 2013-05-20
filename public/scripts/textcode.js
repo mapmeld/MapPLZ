@@ -89,6 +89,9 @@ function writeSample(){
     case "triangles":
       sketch = 'map\n  shape\n    [ 30.5, 30 ]\n    [ 29.5, 29.5 ]\n    [ 30.9, 29.5 ]\n  plz\n  shape\n    #f00\n    [ 28, 28 ]\n    [ 27.5, 24.5 ]\n    [ 30.5, 25.5 ]\n  plz\n  shape\n    #f0f\n    [ 23, 28 ]\n    [ 25.5, 34.5 ]\n    [ 28.5, 30.5 ]\n  plz\nplz';
       break;
+    case "button":
+      sketch = 'map\n  @ "Seattle"\n  button\n    "Click Me"\n    marker\n      @ "Space Needle"\n    plz\n  plz\nplz';
+      break;
   }
   myCodeMirror.setValue( sketch );
 }
