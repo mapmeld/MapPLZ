@@ -12,13 +12,13 @@ CodeMirror.defineMode("ruby", function(config) {
     "caller", "lambda", "proc", "public", "protected", "private", "require", "load",
     "require_relative", "extend", "autoload"
     
-    , "map", "plz", "marker", "line", "shape", "please"
-    , "MAP", "PLZ", "MARKER", "LINE", "SHAPE", "PLEASE"
+    , "map", "plz", "marker", "line", "shape", "please", "button", "btn"
+    , "MAP", "PLZ", "MARKER", "LINE", "SHAPE", "PLEASE", "BUTTON", "BTN"
   ]);
   var indentWords = wordObj(["def", "class", "case", "for", "while", "do", "module", "then",
                              "catch", "loop", "proc", "begin"
-    , "map", "marker", "line", "shape"
-    , "MAP", "MARKER", "LINE", "SHAPE" ]);
+    , "map", "marker", "line", "shape", "button", "btn"
+    , "MAP", "MARKER", "LINE", "SHAPE", "BUTTON", "BTN" ]);
   var dedentWords = wordObj(["end", "until"
     , "plz", "please"
     , "PLZ", "PLEASE" ]);

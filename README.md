@@ -119,6 +119,28 @@ You can add a hexadecimal color (such as #f00 or #ff0000) to lines and shapes:
       #f00
     plz
 
+### Buttons
+
+You can add simple on/off buttons which control when layers are displayed on the map:
+
+    map
+      button        
+        marker
+          "MoMA"
+          @ "11 W 53rd St, New York City, NY"
+        plz
+      plz
+    plz
+
+Place any markers, lines, and shapes inside 'button ... plz' and they will be controlled by the button.
+
+You can set the color and title of each button.
+
+    button
+      #ff00ff
+      "Purple Button"
+    plz
+
 ## Setup
 
 ### Local

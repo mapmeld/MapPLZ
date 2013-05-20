@@ -6,6 +6,8 @@ var color = "";
 var codelines;
 var knownGeoResults = { };
 var bounds = [180, 90, -180, -90]; // xmin, ymin, xmax, ymax
+var inbutton = false;
+var buttonLayers = [ ];
 
 google.maps.visualRefresh=true;
 var map = new google.maps.Map( document.getElementById('map'), {
@@ -22,7 +24,6 @@ google.maps.event.addListener(map, 'click', function(e){
 });
 
 var processLine = function(c){
-
   if(c > codelines.length - 1){
     return;
   }
@@ -31,42 +32,71 @@ var processLine = function(c){
 
   // moving between levels of code
   if(scope == "toplevel"){
-    if(line.indexOf("map") > -1){
+    //if(line.indexOf("map") > -1){
+    if( $(codelines[c], ".cm-keyword")[0].textContent.toLowerCase().indexOf("map") > -1 ){
       scope = "map";
     }
     return processLine(c+1);
   }
-  else if(scope == "map"){
+  else if(scope == "map" || scope == "button"){
     
-    if(line.indexOf("marker") > -1){
+    if(( $(codelines[c], ".cm-keyword")[0].textContent.toLowerCase().indexOf("button") > -1 ) || ( $(codelines[c], ".cm-keyword")[0].textContent.toLowerCase().indexOf("btn") > -1 )){
+      scope = "button";
+      buttonLayers.push({
+        layers: [ ]
+      });
+      inbutton = buttonLayers.length;
+    }
+    
+    if( $(codelines[c], ".cm-keyword")[0].textContent.toLowerCase().indexOf("marker") > -1 ){
       scope = "marker";
       return processLine(c+1);
     }
-    if(line.indexOf("line") > -1){
+    if( $(codelines[c], ".cm-keyword")[0].textContent.toLowerCase().indexOf("line") > -1 ){
       scope = "line";
       return processLine(c+1);
     }
-    if(line.indexOf("shape") > -1){
+    if( $(codelines[c], ".cm-keyword")[0].textContent.toLowerCase().indexOf("shape") > -1 ){
       scope = "shape";
       return processLine(c+1);
     }
     
     if((line.indexOf("plz") > -1) || (line.indexOf("please") > -1)){
-      scope = "toplevel";
-      if(bounds){
-        if( bounds[0] == bounds[2] && bounds[1] == bounds[3] ){
-          // one point
-          map.setCenter( new google.maps.LatLng( bounds[1], bounds[0] ) );
+      if(scope == "map"){
+        scope = "toplevel";
+        if(bounds){
+          if( bounds[0] == bounds[2] && bounds[1] == bounds[3] ){
+            // one point
+            map.setCenter( new google.maps.LatLng( bounds[1], bounds[0] ) );
+          }
+          else if( bounds[0] <  bounds[2] ){
+            // many points
+            map.fitBounds( new google.maps.LatLngBounds(
+              new google.maps.LatLng( bounds[1], bounds[0] ),
+              new google.maps.LatLng( bounds[3], bounds[2] )
+            ));
+          }
         }
-        else if( bounds[0] <  bounds[2] ){
-          // many points
-          map.fitBounds( new google.maps.LatLngBounds(
-            new google.maps.LatLng( bounds[1], bounds[0] ),
-            new google.maps.LatLng( bounds[3], bounds[2] )
-          ));
-        }
+        return;
       }
-      return;
+      else if(scope == "button"){
+        if(buttonLayers[inbutton-1].content){
+          var btn = document.createElement("a");
+          btn.href = "#";
+          btn.className = "btn btn-success";
+          if(buttonLayers[inbutton-1].color){
+            btn.style.background = buttonLayers[inbutton-1].color;
+            btn.style.backgroundColor = buttonLayers[inbutton-1].color;
+          }
+          btn.textContent = buttonLayers[inbutton-1].content;
+          btn.innerHTML = "<span style='display:none;'>&check;&nbsp;&nbsp;</span>" + btn.innerHTML;
+          bindButton( btn, buttonLayers[inbutton-1].layers );
+          $("#buttonbar").append( btn );
+        }
+        scope = "map";
+        inbutton = false;
+        return processLine(c+1);
+      }
     }
   }
   else if((scope == "marker") || (scope == "line") || (scope == "shape")){
@@ -76,14 +106,12 @@ var processLine = function(c){
       if( scope == "marker" ){
         shape = new google.maps.Marker({
           position: latlngs[0],
-          map: map,
           clickable: !(!content.length)
         });
       }
       else if( scope == "line" ){
         shape = new google.maps.Polyline({
           path: latlngs,
-          map: map,
           clickable: !(!content.length),
           strokeColor: (color || null)
         });
@@ -91,7 +119,6 @@ var processLine = function(c){
       else if( scope == "shape" ){
         shape = new google.maps.Polygon({
           paths: latlngs,
-          map: map,
           clickable: !(!content.length),
           strokeColor: (color || null),
           fillColor: (color || null)
@@ -104,9 +131,20 @@ var processLine = function(c){
         else{
           addClickable(shape, null, content);        
         }
-        allshapes.push(shape);
+        if(inbutton){
+          buttonLayers[ inbutton-1 ].layers.push(shape);
+        }
+        else{
+          shape.setMap(map);
+          allshapes.push(shape);
+        }
       }
-      scope = "map";
+      if(inbutton){
+        scope = "button";
+      }
+      else{
+        scope = "map";
+      }
       content = "";
       color = "";
       latlngs = [ ];
@@ -157,6 +195,9 @@ var processLine = function(c){
   // reading a color
   if( codelines[c].children && codelines[c].children.length && (codelines[c].children[0].textContent[0] == "#") ){
     color = codelines[c].children[0].textContent;
+    if(scope == "button"){
+      buttonLayers[ inbutton-1 ].color = color;
+    }
     return processLine(c+1);
   }
   
@@ -166,6 +207,9 @@ var processLine = function(c){
       if(codelines[c].children[n].className == "cm-string"){
         content = codelines[c].children[n].textContent;
         content = content.substring(1, content.length - 1);
+        if(inbutton){
+          buttonLayers[ inbutton-1 ].content = content;
+        }
         return processLine(c+1);
       }
     }
@@ -255,11 +299,34 @@ function addClickable(shape, ll, content){
   });
 }
 
+function bindButton( btn, layers ){
+  var toggled = false;
+  btn.onclick = function(e){
+    toggled = !toggled;
+    if(toggled){
+      $(btn).children()[0].style.display = "inline";
+    }
+    else{
+      $(btn).children()[0].style.display = "none";
+    }
+    for(var i=0;i<layers.length;i++){
+      if(toggled){
+        layers[i].setMap(map);
+      }
+      else{
+        layers[i].setMap(null);
+      }
+    }
+  };
+}
+
 function restart(){
   for(var s=0;s<allshapes.length;s++){
     allshapes[s].setMap(null);
   }
   allshapes = [ ];
+  buttonLayers = [ ];
+  $("#buttonbar").html("");
   bounds = [180, 90, -180, -90];
   scope = "toplevel";
   processLine(0);
