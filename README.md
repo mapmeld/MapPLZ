@@ -66,7 +66,7 @@ Center your map with a written location or coordinates. Here are two examples:
       [ 40, -70 ]
     plz
 
-If you don't set a center of your map, it will try to display all markers, lines, and shapes
+If you don't set a center of your map, the viewport will be set to display all markers, lines, and shapes
 
     map
       line
@@ -117,6 +117,14 @@ You can add a hexadecimal color (such as #f00 or #ff0000) to lines and shapes:
       @ "Pittsburgh, PA"
       "Write a message"
       #f00
+    plz
+
+You can also use names of <a href="http://www.w3schools.com/cssref/css_colornames.asp">CSS colors</a> (including "orange", "purple", or "silver"). They have to start with a # to be interpreted as colors.
+
+    line
+      [ 10, 10 ]
+      [ 0, 0 ]
+      #purple
     plz
 
 ### Buttons

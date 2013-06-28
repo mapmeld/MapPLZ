@@ -195,7 +195,7 @@ var processLine = function(c){
   // reading a color
   if( codelines[c].children && codelines[c].children.length && (codelines[c].children[0].textContent[0] == "#") ){
     color = codelines[c].children[0].textContent;
-    if((color.length != 4 && color.length != 7) || ( !isNaN( parseInt(color.replace("#",""), 16) ))){
+    if((color.length != 4 && color.length != 7) || ( isNaN( parseInt(color.replace("#",""), 16) ))){
       // written color
       color = color.replace("#","");
     }
