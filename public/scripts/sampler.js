@@ -34,7 +34,7 @@ setInterval(function(){
 }, 100);
 
 function startOver(){
-  myCodeMirror.setValue('map\n \n  @ "New York City, NY"\n\n  marker\n    [ 40.689262, -74.044451 ]\n    "Statue of Liberty"\n  plz\n \n  line\n    #f00\n    [ 0, 0 ]\n    [ 40.4, -73.8 ]\n  plz\n\nplz');
+  myCodeMirror.setValue('map\n  (center map)\n\n  @ "New York City, NY"\n\n  (add markers and things)\n  marker\n    [ 40.689262, -74.044451 ]\n    "Statue of Liberty"\n  plz\n \n  line\n    #f00\n    [ 0, 0 ]\n    [ 40.4, -73.8 ]\n  plz\n\nplz');
 }
 
 codelines = $(".CodeMirror-lines pre");
