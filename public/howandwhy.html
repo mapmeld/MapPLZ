@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+  <style type="text/css">
+html{ margin: 0; padding: 0; }
+body{ font-family: verdana, arial, sans-serif; width: 80%; margin-left: 10%; }
+p{ margin-top: 30px; margin-bottom: 10px; line-height: 18pt; }
+li{ margin-bottom:7px; }
+img{ margin-bottom:6px; margin-top:6px; }
+blockquote{ max-width: 50%; }
+a{ text-decoration: none; }
+h3{ width: 100%; text-align: center; border-top: 1px solid #000; padding-top: 10px; }
+.code{ font-family: 'Courier New', Courier, serif; display: block; }
+  </style>
+</head>
+<body>
+<h2>Interpreting a new programming language with CodeMirror<br/>Why &amp; How</h2>
+
+<p>
+<a href="http://www.mapplz.com">MapPLZ</a> is a new programming language for interactive maps.
+<br/>
+For users to code in MapPLZ and see the Google Maps API respond, the site needed to parse and interpret the code on the client-side.
+I used <a href="http://codemirror.net/">CodeMirror</a>, an open-source syntax highlighter and code editor, to help write an interpreter in a day.
+</p>
+
+<!--
+<img src="https://a248.e.akamai.net/camo.github.com/247ba25b368f5b8b4900b294a4d83a4f9092b757/687474703a2f2f692e696d6775722e636f6d2f6869494a4e6a442e706e67" style="max-width:800px;"/>
+<br/>
+-->
+
+<div style="clear:both;"></div>
+
+      <div style="width:500px;height:500px;float:left;">
+        <h3>Live Map Editor</h3>
+        <textarea id="sketchplace"></textarea>
+      </div>
+      <div style="float:left;width:400px;height:400px;overflow:hidden;">
+        <div id="buttonbar"></div>
+        <br/>
+        <div id="map" style="width:400px;height:400px;"></div>
+      </div>
+<br/>
+<div style="clear:both;"></div>
+<a href="https://github.com/mapmeld/mapplz#mapplz-spec">Language Spec</a>
+
+<h3>Why</h3>
+
+<div style="clear:both;"></div>
+<div style="float:left;">
+<img src="http://i.imgur.com/AJOhnRg.jpg" style="max-width:250px;margin-right:10px;"/>
+<br/>
+<small>Kasiisi, Uganda | 2010</small>
+</div>
+
+<p>
+I work on educational technology and online maps, but usually not together.
+<br/>
+Consensus is that children need to learn to code with blocks instead of text, or with commands that make lines and shapes.
+You see this in the entertaining but not-so-practical code environments from
+<a href="http://khanacademy.org/cs">Khan Academy CS</a>, <a href="http://scratch.mit.edu">Scratch</a>,
+<a href="http://www.squeakland.org/">Etoys/Squeak</a>, and the classic Logo turtle.
+</p>
+
+<p>
+Scratch and Etoys/Squeak were two of the learn-to-code activities which ship on the One Laptop per
+Child (OLPC) laptop. The others are TurtleArt (Logo) and Pippy (Python). I taught OLPC classes in
+Uganda, Uruguay, Haiti, and the Marshall Islands. No matter what animal icon we use to represent
+computer code, it is still intimidating to a beginner!
+</p>
+
+<p>
+The most convincing coding environment was Pippy (Python) because you can take a picture and
+spin it. Or you can change some numbers and make the image shrink to a dot.
+</p>
+
+<div style="clear:both;"></div>
+
+<p>
+Following that logic, the best programming environment would be one that is <em>real world</em>.
+Maps are real world. And unlike tangible code-ables such as robots, they are easy, fast, and cheap to make, share, and break.
+</p>
+<p>
+I was tremendously inspired by Bret Victor's vision in his
+<a href="http://worrydream.com/#!/LearnableProgramming">essay on Learnable Programming</a>.
+In addition to supporting "live-coding" environments, Bret wants the IDE to make suggestions and
+visualize what each control structure in the code does. I'm not at that point yet.
+</p>
+
+<h3>How</h3>
+
+<p>
+<a href="http://codemirror.net/">CodeMirror</a> first caught my eye because it supported C. I could add keywords to the library
+and help users code <a href="http://arduino.cc">Arduinos</a>. As you write, CodeMirror handles syntax highlighting
+and showing when you're closing a parenthesis.
+<br/>
+I then wanted to add context-sensitive help. CodeMirror makes it easy to find the line number where your user is typing:
+<br/><br/>
+<span class="code">linenum = myCodeMirror.getCursor().line;</span>
+<br/>
+You can then get the text of that line using
+<br/><br/>
+<span class="code">myCodeMirror.getLine( linenum );</span>
+<br/>
+Scanning the line for keywords like "map" and "plz" was a good start to MapPLZ, but how do I know if the word "map" is used as a keyword or as part of a string?
+CodeMirror's syntax highlighting makes it possible to look just at keywords ( I also use some jQuery here )
+<br/><br/>
+<span class="code">codelines = $(".CodeMirror-lines pre");</span>
+<span class="code">for(var c=0;c&lt;codelines.length;c++){</span>
+<span class="code">&nbsp;&nbsp;&nbsp;keywords = $(codelines[c], ".cm-keyword");</span>
+<span class="code">}</span>
+<br/>
+Note that a cursor on Line 1 does not equal codelines[1]... there is an offset of a few empty &lt;pre&gt;s.
+</p>
+<p>
+Looking at a variety of languages on MapPLZ.com, I decided to start with Ruby's syntax highlighting and added keywords. In Ruby,
+most comments start with a #. I wanted comments to be written (inside parentheses) so I borrowed from another CodeMirror-supported language (JavaScript)
+where /* and */ can begin and end a comment block. CodeMirror puts comments inside a span with class cm-comment, so now my interpreter can skip right over them.
+</p>
+<p>
+With parentheses taken, I can't use the classic programming syntax
+<br/><br/>
+<span class="code">arbitaryFunctionName( MustBeFirstArgument, MustBeSecondArgument );</span>
+<br/>
+<strong>This is silly!</strong> How is a new programmer supposed to know the names, the order, that order matters, even where to find parentheses and semicolons on his/her keyboard?
+<br/>
+In mapping, you don't even need this type of function-parameter model. For example,
+a marker with a popup has a location, a color, and some content. Unless we are being funny
+and making a blue marker titled "red", a programming language should be smart enough to pick
+out which is which. CodeMirror uses different classes to highlight strings and arrays, so I
+just look for those in each line.
+</p>
+<p>
+<strong>Geocoding</strong> - turning addresses into coordinates - is a hard problem which Google handles pretty well. This is why
+I chose the Google Maps API over <a href="http://leafletjs.com">Leaflet</a>. Unfortunately,
+this raises two problems. I need to differentiate a place ("MoMA in New York City") with a description
+("The museum that I visited in New York City"). Until someone gives me a good NLP solution for this,
+I decided to start locations with an @, and CodeMirror's Ruby syntax
+puts them inside spans with class cm-variable-2. A line which has a cm-variable-2 and a cm-string is, therefore, a location-string instead of a string.
+<br/><br/>
+More difficult: callbacks. If you don't know about functions, much less callbacks or anonymous functions, <a href="https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple">geocoding looks hard</a>.
+In MapPLZ, I still need to make geocoding calls asynchronously, but I can hide that from the user. I changed the code-interpreter to be recursive instead of a for loop, so it can return and not continue to the next
+line until after I get a response from Google. This guarantees that when I reach a "plz" at the end of the marker, I have the matching coordinates and description for it.
+</p>
+<p>
+<strong>Running on Empty</strong> - if the user doesn't center the map themselves, the map will pan and zoom to fit any shapes which they've added to the map.
+</p>
+<p>
+<strong>Scope</strong> is less complicated to write than I expected. I keep track of whether the user is inside a map, a marker/line/shape, or a button block. When a line says "plz", I jump back to the block above.
+If you try to make a marker inside a marker, it will just use the last-defined location and description.
+</p>
+<p>
+The complete JavaScript library which I use across the site to parse MapPLZ is most readable <a href="https://github.com/mapmeld/MapPLZ/blob/master/public/scripts/mapplz.js">on GitHub</a>.
+</p>
+
+<h3>DB and Server</h3>
+<p>
+Programs are stored in a <a href="http://www.neo4j.org/">Neo4j</a> graph database, so you can fork programs and build networks.
+<br/>
+The whole thing runs on <a href="http://heroku.com">Heroku</a> for no cost.
+<br/>
+I'm experimenting with <a href="http://www.mapplz.com/code-env/from/23">sample code and context-sensitive help</a> as you edit and write your own MapPLZ code.
+</p>
+
+<h3><a href="http://mapplz.com">Try it out!</a></h3>
+<a href="https://github.com/mapmeld/mapplz">MapPLZ.com on GitHub</a>
+<br/><br/>
+<a href="https://github.com/mapmeld/mapplz#mapplz-spec">Language Specification</a>
+
+<br/>
+<br/>
+Nick Doiron - <a href="http://twitter.com/mapmeld">@mapmeld</a> - July 3, 2013
+<br/>
+<br/>
+  <link type="text/css" rel="stylesheet" href="http://mapplz.com/stylesheets/codemirror.css"/>
+  <script type="text/javascript" src="http://mapplz.com/scripts/codemirror.js"></script>
+  <script type="text/javascript" src="http://mapplz.com/scripts/ruby.js"></script>
+  <script type="text/javascript" src="http://mapplz.com/scripts/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="http://mapplz.com/scripts/mapplz.js"></script>
+  <script type="text/javascript" src="http://mapplz.com/scripts/homepage.js"></script>
+</body>
+</html>
