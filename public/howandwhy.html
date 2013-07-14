@@ -115,7 +115,7 @@ CodeMirror's syntax highlighting makes it possible to look just at keywords ( I 
 Note that a cursor on Line 1 does not equal codelines[1]... there is an offset of a few empty &lt;pre&gt;s.
 </p>
 <p>
-Looking at a variety of languages on MapPLZ.com, I decided to start with Ruby's syntax highlighting and added keywords. In Ruby,
+Looking at a variety of languages on CodeMirror, I decided to start with Ruby's syntax highlighting and added keywords. In Ruby,
 most comments start with a #. I wanted comments to be written (inside parentheses) so I borrowed from another CodeMirror-supported language (JavaScript)
 where /* and */ can begin and end a comment block. CodeMirror puts comments inside a span with class cm-comment, so now my interpreter can skip right over them.
 </p>
@@ -141,7 +141,7 @@ I decided to start locations with an @, and CodeMirror's Ruby syntax
 puts them inside spans with class cm-variable-2. A line which has a cm-variable-2 and a cm-string is, therefore, a location-string instead of a string.
 <br/><br/>
 More difficult: callbacks. If you don't know about functions, much less callbacks or anonymous functions, <a href="https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple">geocoding looks hard</a>.
-In MapPLZ, I still need to make geocoding calls asynchronously, but I can hide that from the user. I changed the code-interpreter to be recursive instead of a for loop, so it can return and not continue to the next
+In MapPLZ, I still need to make geocoding calls asynchronously, but I can hide that from the user. I changed the code-interpreter to be recursive instead of a for loop, so it can return and not parse the next
 line until after I get a response from Google. This guarantees that when I reach a "plz" at the end of the marker, I have the matching coordinates and description for it.
 </p>
 <p>
