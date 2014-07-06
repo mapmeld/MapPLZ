@@ -1,6 +1,6 @@
-{ "name": "MapPLZ"
+{ "name": "MapPLZ-server"
   , "description": "Simple mapping"
-  , "version": "0.0.1"
+  , "version": "0.0.2"
   , "author": "Nick Doiron <ndoiron@mapmeld.com>"
   , "private": true
   , "dependencies":
@@ -10,8 +10,8 @@
     , "stylus": "~0.27.1"
   },
   "engines": {
-      "node": "0.8.x"
-    , "npm": "1.1.x"
+      "node": "0.10.x"
+    , "npm": "1.2.x"
   }
   , "scripts":
     { "start": "node app.js"

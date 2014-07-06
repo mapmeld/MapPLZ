@@ -12,15 +12,32 @@ body
       .span8.offset2
         .hero-unit.text-center
           h1 MapPLZ
-          br
-          a.btn.btn-success(href="http://www.mapplz.com/code-env/") Make a Map
+          p
+            span an easier geo data system across languages and databases
+            br
+            a.btn.btn-primary(href="http://www.mapplz.com#documentation") Documentation
+            a.btn.btn-success(href="http://www.mapplz.com/code-env/") Map Builder
+    .row
+      .span6
+        h3 The Goals
+        span Simplify mapping for developers everywhere by:
+        ul
+          li Consuming many geo data formats via a single ETL function
+          li Hiding complexity of geo queries and indexing
+          li Exporting GeoJSON data and interactive data maps
+          li Supporting multiple languages and databases with a single API
+      .span6
+        h3 Ruby / Rails gem
+        p Currently testing: a Ruby gem 'mapplz' to set up the API for this service
+        p Spatialite and ActiveRecord support still under development.
+        a(href="https://github.com/mapmeld/mapplz-ruby") MapPLZ-Ruby on GitHub
     .row(style="height:auto;")
       .span6(style="height:auto;")
         h3 Live Map Editor
         textarea#sketchplace
         a.btn.btn-success(onclick="startOver();") Start Over
         span &nbsp;&nbsp;&nbsp;
-        a.btn.btn-primary(href="http://www.mapplz.com/code-env/") New Map
+        a.btn.btn-primary(href="http://www.mapplz.com/code-env/") Map Builder
     
       .span6
         #buttonbar
@@ -29,26 +46,6 @@ body
     
     br
     br
-    
-    .row    
-      .span6
-        h3 Alternatives
-        p There are other ways to make your own maps on the internet. Use these point-and-click and spreadsheet-based tools:
-        ul
-          li
-            a(href="http://www.google.com/earth/outreach/tutorials/spreadsheet3.html") Google Spreadsheet Mapper
-          li
-            a(href="https://support.google.com/fusiontables/answer/2527132") Maps in Fusion Tables
-          li
-            a(href="http://support.google.com/maps/bin/answer.py?hl=en&answer=62843") Google MyMaps
-
-      .span5.well
-        h3 Open Source
-        br
-        p A Node.js / Express server with a Neo4j graph database
-        a(href="https://github.com/mapmeld/MapPLZ") Source Code on GitHub
-        br
-        a(href="https://github.com/mapmeld/MapPLZ#mapplz-spec") MapPLZ Spec
 
   script(type="text/javascript", src="/scripts/codemirror.js")
   script(type="text/javascript", src="/scripts/ruby.js")
