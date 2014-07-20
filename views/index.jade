@@ -3,7 +3,7 @@ head
   link(type="text/css", rel="stylesheet", href="/stylesheets/journal.min.css")
   link(type="text/css", rel="stylesheet", href="/stylesheets/codemirror.css")
   style(type="text/css") .CodeMirror {border: 2px solid #000; } .CodeMirror-scroll{ height: auto; overflow: visible; }
-  style(type="text/css") p, #map{ color: #444; } a{ color: #44f } .hero-unit{ text-align: center; padding: 30px; background: rgb( 149, 177, 213 ); } img{ max-width: none !important; }
+  style(type="text/css") p, #map{ color: #444; } a{ color: #44f } .hero-unit{ text-align: center; padding: 30px; background: rgb( 149, 177, 213 ); } img{ max-width: none !important; } .white { color: #fff; font-size: 14pt; }
   script(type="text/javascript") if((window.location+"").indexOf("www.mapplz") == -1){ window.location = "http://www.mapplz.com" }
   script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false")
 body
@@ -13,7 +13,7 @@ body
         .hero-unit.text-center
           h1 MapPLZ
           p
-            span(style: "color: #fff") an easier geo data system across languages and databases
+            span.white an easy geo data system across languages and databases
             br
             a.btn.btn-primary(href="http://www.mapplz.com#documentation") Documentation
             a.btn.btn-success(href="http://www.mapplz.com/code-env/") Map Builder
