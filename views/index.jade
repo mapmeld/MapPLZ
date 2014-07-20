@@ -13,7 +13,7 @@ body
         .hero-unit.text-center
           h1 MapPLZ
           p
-            span an easier geo data system across languages and databases
+            span{ style: "color: #fff" } an easier geo data system across languages and databases
             br
             a.btn.btn-primary(href="http://www.mapplz.com#documentation") Documentation
             a.btn.btn-success(href="http://www.mapplz.com/code-env/") Map Builder
@@ -22,15 +22,34 @@ body
         h3 The Goals
         span Simplify mapping for developers everywhere by:
         ul
-          li Consuming many geo data formats via a single ETL function
+          li Consuming any geo data format via a single ETL function
           li Hiding complexity of geo queries and indexing
-          li Exporting GeoJSON data and interactive data maps
-          li Supporting multiple languages and databases with a single API
+          li Exporting via open data formats and interactive maps
+          li Supporting multiple languages and databases
       .span6
         h3 Ruby / Rails gem
-        p Currently testing: a Ruby gem 'mapplz' to set up the API for this service
+        p 'gem install mapplz' to set up MapPLZ for Ruby scripts and servers
         p Spatialite and ActiveRecord support still under development.
         a(href="https://github.com/mapmeld/mapplz-ruby") MapPLZ-Ruby on GitHub
+
+    .row
+      .span6
+        h3 Go package
+        p 'go get github.com/mapmeld/mapplz-go' and install two other packages to set up MapPLZ for Go scripts and servers
+        p Databases not yet supported
+        a(href="https://github.com/mapmeld/mapplz-go") MapPLZ-Go on GitHub
+      .span6
+        h3 Node package
+        p 'npm install mapplz' to set up MapPLZ for server-side JavaScript
+        p Databases not yet supported
+        a(href="https://github.com/mapmeld/mapplz-node") MapPLZ-Node on GitHub
+
+    .row
+      .span4.offset4
+        img(src="/images/logo.jpg")
+        br
+        h4 Eating up all your garbage data
+
     .row(style="height:auto;")
       .span6(style="height:auto;")
         h3 Live Map Editor
