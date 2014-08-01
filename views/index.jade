@@ -2,7 +2,7 @@ head
   title MapPLZ
   link(type="text/css", rel="stylesheet", href="/stylesheets/journal.min.css")
   link(type="text/css", rel="stylesheet", href="/stylesheets/codemirror.css")
-  style(type="text/css") .CodeMirror {border: 2px solid #000; } .CodeMirror-scroll{ height: auto; overflow: visible; }
+  style(type="text/css") .CodeMirror {border: 2px solid #000; } .CodeMirror-scroll{ height: auto; overflow: visible; } br { line-height: 2; } .coderow a { font-size: 14pt; text-decoration: underline; }
   style(type="text/css") p, #map{ color: #444; } a{ color: #44f } .hero-unit{ text-align: center; padding: 30px; background: rgb( 149, 177, 213 ); } img{ max-width: none !important; } .white { color: #fff; font-size: 14pt; }
   script(type="text/javascript") if((window.location+"").indexOf("www.mapplz") == -1){ window.location = "http://www.mapplz.com" }
   script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false")
@@ -14,36 +14,74 @@ body
           h1 MapPLZ
           p
             span.white an easy geo data system across languages and databases
-            br
-            a.btn.btn-primary(href="http://www.mapplz.com#documentation") Documentation
-            a.btn.btn-success(href="http://www.mapplz.com/code-env/") Map Builder
+    .row.coderow
+      .span4
+        .well
+          h4 Ruby Gem
+          em gem install mapplz
+          br
+          em mapstore << [ lat, lng, { key: value } ]
+          br
+          a(href="https://github.com/mapmeld/mapplz-ruby#mapplz-ruby") Docs and Source
+          br
+          iframe(src="http://ghbtns.com/github-btn.html?user=mapmeld&repo=mapplz-ruby&type=watch&count=true", allowtransparency="true", frameborder="0", scrolling="0", width="122", height="20")
+      .span4
+        h4 Go Package
+        em go get github.com/mapmeld/mapplz-go
+        br
+        em mapstore.Add_Geojson_Feature(`{ "type": "Feature", "geometry": { "type": "LineString", "coordinates": [[0, 0], [10, 10]] } }`)
+        br
+        a(href="https://github.com/mapmeld/mapplz-go#mapplz-go") Docs and Source
+        br
+        iframe(src="http://ghbtns.com/github-btn.html?user=mapmeld&repo=mapplz-go&type=watch&count=true", allowtransparency="true", frameborder="0", scrolling="0", width="122", height="20")
+      .span4
+        .well
+          h4 Node Package
+          em npm install mapplz
+          br
+          em mapstore.add(lat, lng, { key: value }, function(err, pt){    });
+          br
+          a(href="https://github.com/mapmeld/mapplz-node#mapplz-node") Docs and Source
+          br
+          iframe(src="http://ghbtns.com/github-btn.html?user=mapmeld&repo=mapplz-node&type=watch&count=true", allowtransparency="true", frameborder="0", scrolling="0", width="122", height="20")
     .row
-      .span6
-        h3 The Goals
-        span Simplify mapping for developers everywhere by:
-        ul
-          li Consuming any geo data format via a single ETL function
-          li Hiding complexity of geo queries and indexing
-          li Exporting via open data formats and interactive maps
-          li Supporting multiple languages and databases
-      .span6
-        h3 Ruby / Rails gem
-        p 'gem install mapplz' to set up MapPLZ for Ruby scripts and servers
-        p Spatialite and ActiveRecord support still under development.
-        a(href="https://github.com/mapmeld/mapplz-ruby") MapPLZ-Ruby on GitHub
+      .span4
+        h4 PostGIS
+        p Adds, updates, queries, and deletes geospatial data in PostGIS.
+        em pt = mapstore << [ lat, lng ]
+        br
+        em pt.lat = 42.183
+        br
+        em pt.save!
+      .span4
+        .well
+          h4 MongoDB
+          p Adds, updates, queries, and deletes geospatial data in MongoDB.
+          em query := make(map[string]interface{})
+          br
+          em query["key"] = "value"
+          br
+          em results := mapstore.where(query)
+      .span4
+        h4 No DB
+        p Adds, updates, queries, and deletes geospatial data without any database. So scripting is OK!
+        em mapstore.near({ lat: 40, lng: -70 }, 2, function(err, twoNearest){   });
+        br
+    .row
+      .span4
+        .well
+          h4 Simple
+          p Sometimes the code doesn't look like your regular API. Parameters and types are left loose. The goal is to allow you to store your data with as little converting / ETL work as possible.
+          p When you query the database, complexities of point-in-polygon or sort-by-distance queries are hidden inside the module.
+      .span4
+        h4 Script or Server
+        p If you're writing your first mapping script, you don't want to set up a server and a DB. You shouldn't need to. Just add this module.
+        p You can always run mapstore.to_geojson or the equivalent function to export all of your data in an open format.
+      .span4
+        .well
+          h4 Readymade Maps
+          p Export an HTML+JS map using OpenStreetMap and Leaflet.js as an embed or as a full HTML page.
 
-    .row
-      .span6
-        h3 Go package
-        p 'go get github.com/mapmeld/mapplz-go' and install two other packages to set up MapPLZ for Go scripts and servers
-        p Databases not yet supported
-        a(href="https://github.com/mapmeld/mapplz-go") MapPLZ-Go on GitHub
-      .span6
-        h3 Node package
-        p 'npm install mapplz' to set up MapPLZ for server-side JavaScript
-        p Databases not yet supported
-        a(href="https://github.com/mapmeld/mapplz-node") MapPLZ-Node on GitHub
-    
     br
     br
 
@@ -52,6 +90,22 @@ body
         img(src="/images/logo.jpg")
         br
         h4 Eating up all your garbage data
+
+    br
+    br
+    .row
+      .span6
+        h3 The Goals
+        span Simplify mapping for developers everywhere by:
+        ul
+          li Consuming any geo data format via one ETL function
+          li Hiding complexity of geo queries and indexing
+          li Exporting in open data formats and instant interactive maps
+          li Supporting multiple languages and databases
+      .span6
+        h3 Well Tested
+        span Travis CI regularly tests each function in Ruby, Go, and Node using PostGIS, MongoDB, and no-db settings.
+    
 
     .row(style="height:auto;")
       .span6(style="height:auto;")
