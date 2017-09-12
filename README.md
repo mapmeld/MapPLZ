@@ -1,5 +1,7 @@
 # MapPLZ
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mapmeld/MapPLZ.svg)](https://greenkeeper.io/)
+
 ## What it is
 
 Make Google Maps with psuedocode
