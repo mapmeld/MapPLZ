@@ -4,10 +4,10 @@
   , "author": "Nick Doiron <ndoiron@mapmeld.com>"
   , "private": true
   , "dependencies":
-    { "express": "~2.5.8"
-    , "jade": "~0.26.1"
-    , "neo4j": "~0.2.12"
-    , "stylus": "~0.27.1"
+    { "express": "~4.15.4"
+    , "jade": "~1.11.0"
+    , "neo4j": "~1.1.1"
+    , "stylus": "~0.54.5"
   },
   "engines": {
       "node": "0.10.x"
